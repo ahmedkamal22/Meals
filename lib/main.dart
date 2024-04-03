@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/layout/cubit/cubit.dart';
 import 'package:meals/layout/home_screen.dart';
+import 'package:meals/shared/components/constants.dart';
 import 'package:meals/shared/cubit/bloc_observer.dart';
 import 'package:meals/shared/cubit/cubit.dart';
 import 'package:meals/shared/cubit/states.dart';
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) =>
               AppCubit()..changeAppMode(fromShared: isDark),
         ),
+        BlocProvider(
+          create: (BuildContext context) => MealsCubit(),
+        ),
       ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
@@ -39,7 +44,9 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: cubit.isDark ? ThemeMode.dark : ThemeMode.light,
-            home: const HomeScreen(),
+            home: HomeScreen(
+              filteredItems: initialFilters,
+            ),
           );
         },
       ),
