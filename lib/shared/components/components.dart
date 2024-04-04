@@ -395,12 +395,19 @@ Widget defaultListTile({
     ListTile(
       leading: Icon(icon,
           size: 26, color: Theme.of(context).colorScheme.onBackground),
-      title: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+      title: Text(text,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(color: Colors.white)),
       hoverColor: Colors.blue,
       onTap: onTap,
     );
 
-Widget customDrawer({required context, required Function() navigation}) =>
+Widget customDrawer(
+        {required context,
+        required Function() filterNavigation,
+        required Function() settingsNavigation}) =>
     Drawer(
       width: MediaQuery.of(context).size.width / 1.5,
       shadowColor: Colors.white,
@@ -454,10 +461,45 @@ Widget customDrawer({required context, required Function() navigation}) =>
               }),
           defaultListTile(
             context: context,
-            icon: Icons.settings,
+            icon: Icons.filter_alt,
             text: "Filters",
-            onTap: navigation,
+            onTap: filterNavigation,
+          ),
+          defaultListTile(
+            context: context,
+            icon: Icons.settings,
+            text: "Settings",
+            onTap: settingsNavigation,
           ),
         ],
+      ),
+    );
+
+Widget defaultSwitchListTile({
+  required context,
+  required bool value,
+  required Function(bool)? onChanged,
+  required String text,
+  required String subtitle,
+}) =>
+    SwitchListTile(
+      value: value,
+      onChanged: onChanged,
+      title: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: setColor(context),
+            ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: Theme.of(context).textTheme.labelMedium!.copyWith(
+              color: setColor(context),
+            ),
+      ),
+      activeColor: Theme.of(context).colorScheme.tertiary,
+      contentPadding: const EdgeInsetsDirectional.only(
+        start: 34,
+        end: 22,
       ),
     );

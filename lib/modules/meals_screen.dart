@@ -32,7 +32,8 @@ class MealsScreen extends StatelessWidget {
           itemCount: meals!.length,
         ),
         fallback: (BuildContext context) => Center(
-            child: defaultTestScreen(text: "Empty meal select another one")),
+            child:
+                defaultTestScreen(text: "Empty meal select another Category")),
       ),
     );
   }

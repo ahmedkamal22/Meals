@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meals/models/category_model.dart';
 import 'package:meals/models/meals_model.dart';
+import 'package:meals/shared/cubit/cubit.dart';
 
 final categories = [
   CategoryModel(id: 'c1', title: 'Italian', color: Colors.purple),
@@ -376,3 +377,7 @@ Map<Filter, bool> initialFilters = {
 };
 
 late List<MealsModel> availableMeals;
+
+Color setColor(context) {
+  return AppCubit.get(context).isDark ? Colors.white : Colors.black;
+}

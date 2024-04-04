@@ -39,9 +39,14 @@ class MealDetailsScreen extends StatelessWidget {
                   onPressed: () {
                     cubit.changeFavourites(meals!);
                   },
-                  icon: const Icon(
-                    Icons.star,
-                  )),
+                  icon: state is MealsAddToFavouritesState
+                      ? const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        )
+                      : const Icon(
+                          Icons.star_border_outlined,
+                        )),
             ],
           ),
           body: buildIngredientsItem(context, meals!),
