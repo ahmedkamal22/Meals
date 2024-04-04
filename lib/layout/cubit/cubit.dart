@@ -30,7 +30,7 @@ class MealsCubit extends Cubit<MealsStates> {
   ];
 
   List<Widget> screens = [
-    const CategoriesScreen(),
+    CategoriesScreen(),
     FavouritesScreen(),
   ];
 
