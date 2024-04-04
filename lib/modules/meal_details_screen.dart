@@ -36,17 +36,31 @@ class MealDetailsScreen extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                  onPressed: () {
-                    cubit.changeFavourites(meals!);
-                  },
-                  icon: state is MealsAddToFavouritesState
-                      ? const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        )
-                      : const Icon(
-                          Icons.star_border_outlined,
-                        )),
+                onPressed: () {
+                  cubit.changeFavourites(meals!);
+                },
+                icon: AnimatedSwitcher(
+                  duration: const Duration(
+                    milliseconds: 300,
+                  ),
+                  transitionBuilder: (child, animation) => RotationTransition(
+                    turns: Tween<double>(
+                      begin: 0.8,
+                      end: 1.0,
+                    ).animate(animation),
+                    child: child,
+                  ),
+                  child: Icon(
+                    state is MealsAddToFavouritesState
+                        ? Icons.star
+                        : Icons.star_border_outlined,
+                    color: state is MealsAddToFavouritesState
+                        ? Colors.amberAccent
+                        : Colors.grey,
+                    key: ValueKey(state is MealsAddToFavouritesState),
+                  ),
+                ),
+              ),
             ],
           ),
           body: buildIngredientsItem(context, meals!),

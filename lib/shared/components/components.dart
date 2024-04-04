@@ -203,12 +203,12 @@ showSnackBar(context, String message) =>
       ),
     );
 
-Widget buildMealItem(context, MealsModel? model) => InkWell(
+Widget buildMealItem(context, MealsModel meals) => InkWell(
       onTap: () {
         navigateTo(
             context,
             MealDetailsScreen(
-              meals: model,
+              meals: meals,
             ));
       },
       borderRadius: BorderRadius.circular(20),
@@ -226,15 +226,18 @@ Widget buildMealItem(context, MealsModel? model) => InkWell(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: FadeInImage(
-                fadeInCurve: Curves.fastLinearToSlowEaseIn,
-                placeholder: MemoryImage(kTransparentImage),
-                image: NetworkImage(
-                  "${model!.imageUrl}",
+              child: Hero(
+                tag: meals.id!,
+                child: FadeInImage(
+                  fadeInCurve: Curves.fastLinearToSlowEaseIn,
+                  placeholder: MemoryImage(kTransparentImage),
+                  image: NetworkImage(
+                    "${meals.imageUrl}",
+                  ),
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
                 ),
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
               ),
             ),
             Container(
@@ -245,7 +248,7 @@ Widget buildMealItem(context, MealsModel? model) => InkWell(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "${model.title}",
+                    "${meals.title}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
@@ -260,17 +263,17 @@ Widget buildMealItem(context, MealsModel? model) => InkWell(
                     children: [
                       buildRowItem(
                           icon: Icons.watch_later_outlined,
-                          label: "${model.duration} min"),
+                          label: "${meals.duration} min"),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: buildRowItem(
                             icon: Icons.work,
-                            label: model.complexity.toString().split(".").last),
+                            label: meals.complexity.toString().split(".").last),
                       ),
                       buildRowItem(
                           icon: Icons.attach_money_outlined,
                           label:
-                              model.affordability.toString().split(".").last),
+                              meals.affordability.toString().split(".").last),
                     ],
                   ),
                 ],
@@ -326,17 +329,20 @@ Widget buildIngredientsItem(context, MealsModel meals) => SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    "${meals.imageUrl}",
+            Hero(
+              tag: meals.id!,
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      "${meals.imageUrl}",
+                    ),
+                    fit: BoxFit.cover,
                   ),
-                  fit: BoxFit.cover,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                borderRadius: BorderRadius.circular(10),
               ),
             ),
             const SizedBox(
