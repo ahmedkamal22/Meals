@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/generated/l10n.dart';
 import 'package:meals/layout/cubit/cubit.dart';
 import 'package:meals/layout/cubit/states.dart';
 import 'package:meals/models/meals_model.dart';
@@ -34,7 +35,7 @@ class FavouritesScreen extends StatelessWidget {
             itemCount: cubit.favourites.length,
           ),
           fallback: (context) => Center(
-            child: defaultTestScreen(text: "There isn't favourite meals yet"),
+            child: defaultTestScreen(text: S.of(context).notInFavourites),
           ),
         );
       },

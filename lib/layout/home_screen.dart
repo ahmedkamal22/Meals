@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/generated/l10n.dart';
 import 'package:meals/layout/cubit/cubit.dart';
 import 'package:meals/layout/cubit/states.dart';
 import 'package:meals/models/meals_model.dart';
@@ -20,10 +21,12 @@ class HomeScreen extends StatelessWidget {
       listener: (BuildContext context, MealsStates state) {},
       builder: (BuildContext context, MealsStates state) {
         var cubit = MealsCubit.get(context);
-        cubit.selectFilters(filtered: filteredItems);
+        cubit.selectFilters(filtered: filteredItems, context: context);
         return Scaffold(
           appBar: AppBar(
-            title: Text(cubit.titles[cubit.currentIndex]),
+            title: Text(cubit.titles[cubit.currentIndex] == "Pick your category"
+                ? S.of(context).Pick_your_category
+                : S.of(context).Favourites),
           ),
           drawer: customDrawer(
             context: context,
@@ -48,7 +51,17 @@ class HomeScreen extends StatelessWidget {
             onTap: (index) {
               cubit.changeBottomNav(index);
             },
-            items: cubit.items,
+            items: [
+              BottomNavigationBarItem(
+                label: S.of(context).Categories,
+                icon: const Icon(Icons.set_meal),
+              ),
+              BottomNavigationBarItem(
+                label: S.of(context).Favourites,
+                icon: const Icon(Icons.star),
+              ),
+            ],
+            //? S.of(context).Categories : S.of(context).Favourites
           ),
         );
       },

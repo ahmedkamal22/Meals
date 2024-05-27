@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:meals/generated/l10n.dart';
 import 'package:meals/layout/cubit/cubit.dart';
 import 'package:meals/layout/home_screen.dart';
 import 'package:meals/shared/components/constants.dart';
@@ -41,6 +43,14 @@ class MyApp extends StatelessWidget {
           var cubit = AppCubit.get(context);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
+            locale: cubit.appLocale,
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: cubit.isDark ? ThemeMode.dark : ThemeMode.light,

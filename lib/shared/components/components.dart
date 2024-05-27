@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:meals/generated/l10n.dart';
 import 'package:meals/models/category_model.dart';
 import 'package:meals/models/meals_model.dart';
 import 'package:meals/modules/meal_details_screen.dart';
 import 'package:meals/modules/meals_screen.dart';
 import 'package:meals/shared/components/constants.dart';
+import 'package:meals/shared/cubit/cubit.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+navigatingAnimation(Widget widget) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => widget,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      var offsetAnimation = animation.drive(tween);
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+    });
 
 navigateTo(context, widget) => Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => widget),
+      navigatingAnimation(widget),
     );
 
 navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => widget),
+      navigatingAnimation(widget),
       (route) => false,
     );
 
@@ -141,18 +157,18 @@ showToast({required String msg, required ToastStates state}) =>
         textColor: Colors.white,
         fontSize: 16.0);
 
-enum ToastStates { Success, Warning, Error }
+enum ToastStates { success, warning, error }
 
 changeToastColor(ToastStates state) {
   Color? color;
   switch (state) {
-    case ToastStates.Success:
+    case ToastStates.success:
       color = Colors.green;
       break;
-    case ToastStates.Warning:
+    case ToastStates.warning:
       color = Colors.amberAccent;
       break;
-    case ToastStates.Error:
+    case ToastStates.error:
       color = Colors.red;
       break;
     default:
@@ -204,14 +220,14 @@ showSnackBar(context, String message) =>
     );
 
 Widget buildMealItem(context, MealsModel meals) => InkWell(
-      onTap: () {
+  onTap: () {
         navigateTo(
             context,
             MealDetailsScreen(
               meals: meals,
             ));
       },
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(10),
       splashColor: Theme.of(context).primaryColor,
       child: Card(
         clipBehavior: Clip.hardEdge,
@@ -263,17 +279,24 @@ Widget buildMealItem(context, MealsModel meals) => InkWell(
                     children: [
                       buildRowItem(
                           icon: Icons.watch_later_outlined,
-                          label: "${meals.duration} min"),
+                          label: "${meals.duration} ${S.of(context).min}"),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: buildRowItem(
                             icon: Icons.work,
-                            label: meals.complexity.toString().split(".").last),
+                            label: meals.complexity!
+                                .localized(context)
+                                .toString()
+                                .split(".")
+                                .last),
                       ),
                       buildRowItem(
                           icon: Icons.attach_money_outlined,
-                          label:
-                              meals.affordability.toString().split(".").last),
+                          label: meals.affordability!
+                              .localized(context)
+                              .toString()
+                              .split(".")
+                              .last),
                     ],
                   ),
                 ],
@@ -296,7 +319,7 @@ Widget buildGridItem(context, CategoryModel model) => InkWell(
               meals: filteredMeals,
             ));
       },
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(16),
       splashColor: Theme.of(context).primaryColor,
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -313,7 +336,9 @@ Widget buildGridItem(context, CategoryModel model) => InkWell(
         ),
         child: Text(
           "${model.title}",
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 20),
+          style: model.title == "Summer Luxurious"
+              ? Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 17)
+              : Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 20),
         ),
       ),
     );
@@ -349,7 +374,7 @@ Widget buildIngredientsItem(context, MealsModel meals) => SingleChildScrollView(
               height: 10,
             ),
             Text(
-              "Ingredients",
+              S.of(context).Ingredients,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontSize: 25, color: Colors.deepOrangeAccent.shade400),
             ),
@@ -361,8 +386,8 @@ Widget buildIngredientsItem(context, MealsModel meals) => SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) => Text(meals.ingredients![index],
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        height: .7,
-                        fontSize: 14,
+                    height: .7,
+                        fontSize: 17,
                         fontWeight: FontWeight.normal,
                       ),
                   textAlign: TextAlign.center),
@@ -372,7 +397,7 @@ Widget buildIngredientsItem(context, MealsModel meals) => SingleChildScrollView(
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(
-                "Steps",
+                S.of(context).Steps,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontSize: 25, color: Colors.deepOrangeAccent.shade400),
               ),
@@ -382,7 +407,7 @@ Widget buildIngredientsItem(context, MealsModel meals) => SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) => Text(meals.steps![index],
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      height: 1.1, fontSize: 14, fontWeight: FontWeight.normal),
+                      height: 1.1, fontSize: 17, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.center),
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemCount: meals.steps!.length,
@@ -400,12 +425,12 @@ Widget defaultListTile({
 }) =>
     ListTile(
       leading: Icon(icon,
-          size: 26, color: Theme.of(context).colorScheme.onBackground),
+          size: 26,
+          color: AppCubit.get(context).isDark ? Colors.white : Colors.black),
       title: Text(text,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .copyWith(color: Colors.white)),
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color:
+                  AppCubit.get(context).isDark ? Colors.white : Colors.black)),
       hoverColor: Colors.blue,
       onTap: onTap,
     );
@@ -416,12 +441,15 @@ Widget customDrawer(
         required Function() settingsNavigation}) =>
     Drawer(
       width: MediaQuery.of(context).size.width / 1.5,
-      shadowColor: Colors.white,
-      backgroundColor: HexColor("333739"),
+      shadowColor: AppCubit.get(context).isDark ? Colors.white : Colors.black,
+      backgroundColor:
+          AppCubit.get(context).isDark ? HexColor("333739") : Colors.grey[400],
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadiusDirectional.only(
-          topEnd: Radius.circular(20),
-          bottomEnd: Radius.circular(10),
+          topEnd: Radius.circular(110),
+          topStart: Radius.circular(40),
+          bottomStart: Radius.circular(10),
+          bottomEnd: Radius.circular(110),
         ),
       ),
       child: Column(
@@ -431,11 +459,18 @@ Widget customDrawer(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).colorScheme.primaryContainer,
-                  Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withOpacity(.8),
+                  AppCubit.get(context).isDark
+                      ? Theme.of(context).colorScheme.onInverseSurface
+                      : Theme.of(context).colorScheme.primary,
+                  AppCubit.get(context).isDark
+                      ? Theme.of(context)
+                          .colorScheme
+                          .onErrorContainer
+                          .withOpacity(.1)
+                      : Theme.of(context)
+                          .colorScheme
+                          .onErrorContainer
+                          .withOpacity(.6),
                 ],
                 begin: AlignmentDirectional.topStart,
                 end: AlignmentDirectional.bottomEnd,
@@ -443,17 +478,20 @@ Widget customDrawer(
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.fastfood,
                   size: 48,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: Colors.deepOrangeAccent,
                 ),
                 const SizedBox(
                   width: 15,
                 ),
                 Text(
-                  "Cooking Up!",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  S.of(context).cookingUp,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.deepOrangeAccent),
                 ),
               ],
             ),
@@ -461,20 +499,20 @@ Widget customDrawer(
           defaultListTile(
               context: context,
               icon: Icons.restaurant,
-              text: "Meals",
+              text: S.of(context).Meals,
               onTap: () {
                 Navigator.pop(context);
               }),
           defaultListTile(
             context: context,
             icon: Icons.filter_alt,
-            text: "Filters",
+            text: S.of(context).Filters,
             onTap: filterNavigation,
           ),
           defaultListTile(
             context: context,
             icon: Icons.settings,
-            text: "Settings",
+            text: S.of(context).Settings,
             onTap: settingsNavigation,
           ),
         ],
@@ -503,7 +541,7 @@ Widget defaultSwitchListTile({
               color: setColor(context),
             ),
       ),
-      activeColor: Theme.of(context).colorScheme.tertiary,
+      activeColor: Colors.deepOrange,
       contentPadding: const EdgeInsetsDirectional.only(
         start: 34,
         end: 22,

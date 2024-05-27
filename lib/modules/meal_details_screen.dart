@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/generated/l10n.dart';
 import 'package:meals/layout/cubit/cubit.dart';
 import 'package:meals/layout/cubit/states.dart';
 import 'package:meals/models/meals_model.dart';
@@ -18,9 +19,9 @@ class MealDetailsScreen extends StatelessWidget {
     return BlocConsumer<MealsCubit, MealsStates>(
       listener: (BuildContext context, MealsStates state) {
         if (state is MealsAddToFavouritesState) {
-          showSnackBar(context, "Added To Favourites Successfully");
+          showSnackBar(context, S.of(context).Added_To_Favourites);
         } else if (state is MealsRemoveFromFavouritesState) {
-          showSnackBar(context, "Removed From Favourites Successfully");
+          showSnackBar(context, S.of(context).Removed_From_Favourites);
         }
       },
       builder: (BuildContext context, MealsStates state) {
@@ -34,6 +35,11 @@ class MealDetailsScreen extends StatelessWidget {
                     fontSize: 18,
                   ),
             ),
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back_ios)),
             actions: [
               IconButton(
                 onPressed: () {
@@ -51,13 +57,13 @@ class MealDetailsScreen extends StatelessWidget {
                     child: child,
                   ),
                   child: Icon(
-                    state is MealsAddToFavouritesState
+                    cubit.isItInFav(meals!)
                         ? Icons.star
                         : Icons.star_border_outlined,
-                    color: state is MealsAddToFavouritesState
+                    color: cubit.isItInFav(meals!)
                         ? Colors.amberAccent
                         : Colors.grey,
-                    key: ValueKey(state is MealsAddToFavouritesState),
+                    // key: ValueKey(state is MealsAddToFavouritesState),
                   ),
                 ),
               ),

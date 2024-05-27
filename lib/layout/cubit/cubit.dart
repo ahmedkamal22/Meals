@@ -18,17 +18,6 @@ class MealsCubit extends Cubit<MealsStates> {
     emit(MealsChangeBottomNavState());
   }
 
-  List<BottomNavigationBarItem> items = [
-    const BottomNavigationBarItem(
-      label: "Categories",
-      icon: Icon(Icons.set_meal),
-    ),
-    const BottomNavigationBarItem(
-      label: "Favourites",
-      icon: Icon(Icons.star),
-    ),
-  ];
-
   List<Widget> screens = [
     CategoriesScreen(),
     FavouritesScreen(),
@@ -40,20 +29,27 @@ class MealsCubit extends Cubit<MealsStates> {
   ];
 
   List<MealsModel> favourites = [];
+  Map<String, bool> changeFavIconColor = {};
 
   changeFavourites(MealsModel meal) {
     final isExisting = favourites.contains(meal);
     if (isExisting) {
       favourites.remove(meal);
+      changeFavIconColor[meal.id!] = false;
       emit(MealsRemoveFromFavouritesState());
     } else {
       favourites.add(meal);
+      changeFavIconColor[meal.id!] = true;
       emit(MealsAddToFavouritesState());
     }
   }
 
-  selectFilters({required Map<Filter, bool> filtered}) {
-    availableMeals = dummyMeals.where((element) {
+  bool isItInFav(MealsModel meal) {
+    return changeFavIconColor[meal.id] ?? false;
+  }
+
+  selectFilters({required Map<Filter, bool> filtered, required context}) {
+    availableMeals = setDummyMeals(context).where((element) {
       if (!filtered.containsValue(true)) {
         return true;
       }

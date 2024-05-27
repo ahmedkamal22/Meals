@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/generated/l10n.dart';
 import 'package:meals/layout/cubit/cubit.dart';
 import 'package:meals/layout/cubit/states.dart';
 import 'package:meals/layout/home_screen.dart';
@@ -19,7 +20,7 @@ class FiltersScreen extends StatelessWidget {
         var cubit = MealsCubit.get(context);
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Your Filters"),
+            title: Text(S.of(context).Meals_Filters),
             leading: IconButton(
                 onPressed: () {
                   navigateAndFinish(
@@ -47,8 +48,8 @@ class FiltersScreen extends StatelessWidget {
                   onChanged: (value) {
                     cubit.changeGlutenState();
                   },
-                  text: "Gluten-free",
-                  subtitle: "Only include gluten-free meals.",
+                  text: S.of(context).Gluten_free,
+                  subtitle: S.of(context).only_include_gluten_free_meals,
                 ),
                 defaultSwitchListTile(
                   context: context,
@@ -56,8 +57,8 @@ class FiltersScreen extends StatelessWidget {
                   onChanged: (value) {
                     cubit.changeLactoseState();
                   },
-                  text: "Lactose-free",
-                  subtitle: "Only include lactose-free meals.",
+                  text: S.of(context).Lactose_free,
+                  subtitle: S.of(context).only_include_lactose_free_meals,
                 ),
                 defaultSwitchListTile(
                   context: context,
@@ -65,8 +66,8 @@ class FiltersScreen extends StatelessWidget {
                   onChanged: (value) {
                     cubit.changeVegetarianState();
                   },
-                  text: "Vegetarian-free",
-                  subtitle: "Only include vegetarian-free meals.",
+                  text: S.of(context).Vegetarian_free,
+                  subtitle: S.of(context).only_include_vegetarian_free_meals,
                 ),
                 defaultSwitchListTile(
                   context: context,
@@ -74,8 +75,8 @@ class FiltersScreen extends StatelessWidget {
                   onChanged: (value) {
                     cubit.changeVeganState();
                   },
-                  text: "Vegan-free",
-                  subtitle: "Only include vegan-free meals.",
+                  text: S.of(context).Vegan_free,
+                  subtitle: S.of(context).only_include_vegan_free_meals,
                 ),
               ],
             ),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meals/shared/cubit/states.dart';
 import 'package:meals/shared/network/local/cache_helper.dart';
@@ -19,5 +21,16 @@ class AppCubit extends Cubit<AppStates> {
         emit(AppChangeModeState());
       });
     }
+  }
+
+  Locale appLocale = const Locale('en');
+
+  void changeLocale() {
+    if (appLocale.languageCode == 'en') {
+      appLocale = const Locale('ar');
+    } else {
+      appLocale = const Locale('en');
+    }
+    emit(AppChangeLangState());
   }
 }

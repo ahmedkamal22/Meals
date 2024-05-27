@@ -15,3 +15,4 @@ class MealsChangeLactoseState extends MealsStates {}
 class MealsChangeVegetarianState extends MealsStates {}
 
 class MealsChangeVeganState extends MealsStates {}
+

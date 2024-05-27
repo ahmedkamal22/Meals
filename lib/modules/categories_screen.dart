@@ -54,7 +54,8 @@ class _CategoriesScreenState extends State<CategoriesScreen>
           mainAxisSpacing: 20,
         ),
         children: [
-          for (final category in categories) buildGridItem(context, category),
+          for (final category in setCategories(context))
+            buildGridItem(context, category),
         ],
       ),
     );

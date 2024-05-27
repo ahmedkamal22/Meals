@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:meals/generated/l10n.dart';
 import 'package:meals/models/meals_model.dart';
 import 'package:meals/shared/components/components.dart';
 
@@ -19,6 +20,11 @@ class MealsScreen extends StatelessWidget {
                 fontSize: 20,
               ),
         ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios)),
       ),
       body: ConditionalBuilder(
         condition: meals!.isNotEmpty,
@@ -31,9 +37,8 @@ class MealsScreen extends StatelessWidget {
           ),
           itemCount: meals!.length,
         ),
-        fallback: (BuildContext context) => Center(
-            child:
-                defaultTestScreen(text: "Empty meal select another Category")),
+        fallback: (BuildContext context) =>
+            Center(child: defaultTestScreen(text: S.of(context).Empty_meal)),
       ),
     );
   }

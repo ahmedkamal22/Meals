@@ -1,15 +1,52 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/material.dart';
+import 'package:meals/generated/l10n.dart';
+
 enum Complexity {
   Simple,
   Challenging,
   Hard,
 }
 
+extension ComplexityExtension on Complexity {
+  String localized(BuildContext context) {
+    switch (this) {
+      case Complexity.Simple:
+        return S
+            .of(context)
+            .Simple; // Assuming AppLocalizations is your generated localization class
+      case Complexity.Challenging:
+        return S.of(context).Challenging;
+      case Complexity.Hard:
+        return S.of(context).Hard;
+      default:
+        return '';
+    }
+  }
+}
+
 enum Affordability {
   Affordable,
   Pricey,
   Luxurious,
+}
+
+extension AffordabilityExtension on Affordability {
+  String localized(BuildContext context) {
+    switch (this) {
+      case Affordability.Affordable:
+        return S
+            .of(context)
+            .Affordable; // Assuming AppLocalizations is your generated localization class
+      case Affordability.Pricey:
+        return S.of(context).Pricey;
+      case Affordability.Luxurious:
+        return S.of(context).Luxurious;
+      default:
+        return '';
+    }
+  }
 }
 
 class MealsModel {
